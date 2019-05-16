@@ -11,3 +11,10 @@ html, body {
 .pull-right{
     float: right;
 }
+
+.box-shadow {
+    display: block;
+    -webkit-box-shadow: 7px 13px 21px -11px rgba(0,0,0,0.76);
+    -moz-box-shadow: 7px 13px 21px -11px rgba(0,0,0,0.76);
+    box-shadow: 7px 13px 21px -11px rgba(0,0,0,0.76);
+}

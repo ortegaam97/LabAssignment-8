@@ -1,15 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Contact } from './contact.model';
 import { HttpClient } from '@angular/common/http';
+import { LocalStorageService } from '../localStorageService';
+import { IUser } from '../login/login.component';
+import { ToastService } from '../toast/toast.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
 @Component({
-  selector: 'contact',
+  selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
 export class ContactComponent implements OnInit {
 
   contacts: Array<Contact>;
-  constructor(private http: HttpClient) { }
+  contactParams = '';
+  localStorageService: LocalStorageService<Contact>;
+
+  constructor(
+    private http: HttpClient,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private toastService: ToastService) {
+    this.localStorageService = new LocalStorageService('contacts');
+  }
 
   async ngOnInit() {
     this.loadContacts();
@@ -38,7 +52,8 @@ export class ContactComponent implements OnInit {
     this.saveItemsToLocalStorage(this.contacts);
   }
 
-  saveContact(contact: Contact) {
+  saveContact(contact: any) {
+    this.toastService.showToast('success', 'Contact Saved!', 3000);
     contact.editing = false;
     this.sort();
     // this.saveItemsToLocalStorage(this.contacts);
@@ -51,13 +66,15 @@ export class ContactComponent implements OnInit {
   }
 
   saveItemsToLocalStorage(contacts: Array<Contact>) {
-    const savedContacts = localStorage.setItem('contacts', JSON.stringify(contacts));
-    return savedContacts;
+    return this.localStorageService.saveItemsToLocalStorage(contacts);
+    // const savedContacts = localStorage.setItem('contacts', JSON.stringify(contacts));
+    // return savedContacts;
   }
 
   getItemsFromLocalStorage(key: string) {
-    const savedContacts = JSON.parse(localStorage.getItem(key));
-    return savedContacts;
+    // const savedContacts = JSON.parse(localStorage.getItem(key));
+    return this.localStorageService.getItemsFromLocalStorage();
+    // return savedContacts;
   }
 
   searchContact(params: string) {
